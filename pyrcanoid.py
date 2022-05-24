@@ -1,7 +1,7 @@
 # Arcanoid clone written with Python and pygame
 
 # Import and initialize the pygame library
-from typing import Tuple
+from typing import Tuple, Optional
 import pygame
 import random
 
@@ -27,7 +27,7 @@ SCALED = pygame.SCALED
 
 class Player(pygame.sprite.Sprite):
     surf: pygame.Surface
-    rect: pygame.Rect
+    rect: Optional[pygame.rect.Rect]
     def __init__(self) -> None:
         super().__init__()
         self.surf = pygame.Surface((70, 20))
@@ -53,7 +53,7 @@ class Player(pygame.sprite.Sprite):
 # The surface you draw on the screen is now an attribute of 'ball'
 class Ball(pygame.sprite.Sprite):
     surf: pygame.Surface
-    rect: pygame.Rect
+    rect: Optional[pygame.rect.Rect]
     speed_x: int
     speed_y: int
     def __init__(self) -> None:
@@ -86,7 +86,7 @@ class Ball(pygame.sprite.Sprite):
 # Define enemy class
 class Enemy(pygame.sprite.Sprite):
     surf: pygame.Surface
-    rect: pygame.Rect
+    rect: Optional[pygame.rect.Rect]
     def __init__(self) -> None:
         super().__init__()
         self.surf = pygame.Surface((80, 20))
