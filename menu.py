@@ -3,6 +3,9 @@ Describe pyrcanoid menu classes
 """
 import pygame
 
+from typing import Type
+
+
 class Menu:
     middle_width: int
     middle_height: int
@@ -30,18 +33,15 @@ class MainMenu(Menu):
     state: str = 'Start'
     start_x: int
     start_y: int
-    option_x: int
-    option_y: int
-    credits_x: int
-    credits_y: int
+    quit_x: int
+    quit_y: int
+
     def __init__(self, game) -> None:
         super().__init__(game)
         self.start_x = self.middle_width
         self.start_y = self.middle_height + 30
-        self.option_x = self.middle_width
-        self.option_y = self.middle_height + 50
-        self.credits_x = self.middle_width
-        self.credits_y = self.middle_height + 70
+        self.quit_x = self.middle_width
+        self.quit_y = self.middle_height + 50
         self.cursor_rect.midtop = (self.start_x + self.offset, self.start_y)
 
     def display_menu(self) -> None:
@@ -53,43 +53,37 @@ class MainMenu(Menu):
             self.game.draw_text('Pyrcanoid', 40, self.middle_width, self.middle_height - 100)
             self.game.draw_text('Main Menu', 20, self.middle_width, self.middle_height - 20)
             self.game.draw_text('Start Game', 20, self.start_x, self.start_y)
-            self.game.draw_text('Options', 20, self.option_x, self.option_y)
-            self.game.draw_text('Credits', 20, self.credits_x, self.credits_y)
+            self.game.draw_text('Quit', 20, self.quit_x, self.quit_y)
             self.draw_cursor()
             self.blit_screen()
 
     def move_cursor(self) -> None:
         if self.game.DOWN_KEY:
             if self.state == 'Start':
-                self.cursor_rect.midtop = (self.option_x + self.offset, self.option_y)
-                self.state = 'Options'
-            elif self.state == 'Options':
-                self.cursor_rect.midtop = (self.credits_x + self.offset, self.credits_y)
-                self.state = 'Credits'
-            elif self.state == 'Credits':
-                self.cursor_rect.midtop = (self.start_x+ self.offset, self.start_y)
-                self.state = 'Start'
-        elif self.game.UP_KEY:
-            if self.state == 'Start':
-                self.cursor_rect.midtop = (self.credits_x + self.offset, self.credits_y)
-                self.state = 'Credits'
-            elif self.state == 'Options':
+                self.cursor_rect.midtop = (self.quit_x + self.offset, self.quit_y)
+                self.state = 'Quit'
+            elif self.state == 'Quit':
                 self.cursor_rect.midtop = (self.start_x + self.offset, self.start_y)
                 self.state = 'Start'
-            elif self.state == 'Credits':
-                self.cursor_rect.midtop = (self.option_x+ self.offset, self.option_y)
-                self.state = 'Options'
+
+        elif self.game.UP_KEY:
+            if self.state == 'Start':
+                self.cursor_rect.midtop = (self.quit_x + self.offset, self.quit_y)
+                self.state = 'Quit'
+            elif self.state == 'Quit':
+                self.cursor_rect.midtop = (self.start_x + self.offset, self.start_y)
+                self.state = 'Start'
 
     def check_input(self):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Start':
                 self.game.playing = True
-            elif self.state == 'Options':
-                self.game.curr_menu = self.game.options
-            elif self.state == 'Credits':
-                self.game.curr_menu = self.game.credits
-            self.run_display = False
+            elif self.state == 'Quit':
+                self.game.playing = False
+                self.game.running = False
+                self.display_menu = False
+                pygame.quit()
 
 class OptionsMenu(Menu):
     def __init__(self, game):

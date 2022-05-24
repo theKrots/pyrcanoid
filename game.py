@@ -1,7 +1,7 @@
 import pygame
 
 from typing import Tuple
-from menu import MainMenu, OptionsMenu, CreditsMenu
+# from menu import MainMenu, OptionsMenu, CreditsMenu
 
 class Game():
     SCREEN_WIDTH: int = 800
@@ -20,10 +20,10 @@ class Game():
         self.display = pygame.Surface((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.window = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.font_name = '8-BIT WONDER.TTF'
-        self.main_menu = MainMenu(self)
-        self.options = OptionsMenu(self)
-        self.credits = CreditsMenu(self)
-        self.curr_menu = self.main_menu
+        # self.main_menu = MainMenu(self)
+        # self.options = OptionsMenu(self)
+        # self.credits = CreditsMenu(self)
+        # self.curr_menu = self.main_menu
 
     def game_loop(self) -> None:
         while self.playing:
@@ -40,7 +40,7 @@ class Game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running, self.playing = False, False
-                self.curr_menu.run_display = False
+                # self.curr_menu.run_display = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.START_KEY = True
