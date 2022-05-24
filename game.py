@@ -1,7 +1,9 @@
 import pygame
 
 from typing import Tuple
-# from menu import MainMenu, OptionsMenu, CreditsMenu
+from player import Player
+from ball import Ball
+from enemy import Enemy
 
 SCREEN_WIDTH: int = 800
 SCREEN_HEIGHT: int = 600
