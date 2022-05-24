@@ -3,9 +3,10 @@ import pygame
 from typing import Tuple
 # from menu import MainMenu, OptionsMenu, CreditsMenu
 
+SCREEN_WIDTH: int = 800
+SCREEN_HEIGHT: int = 600
+
 class Game():
-    SCREEN_WIDTH: int = 800
-    SCREEN_HEIGHT: int = 600
     FULLSCREEN = pygame.FULLSCREEN
     SCALED = pygame.SCALED
     WHITE: Tuple[int, int, int] = (255, 255, 255)
@@ -13,8 +14,10 @@ class Game():
     running: bool
     playing: bool
     font_name: str
-    def __init__(self) -> None:
+    def __init__(self, screen_width=SCREEN_WIDTH, screen_height=SCREEN_HEIGHT) -> None:
         pygame.init()
+        self.SCREEN_WIDTH = screen_width
+        self.SCREEN_HEIGHT = screen_height
         self.running, self.playing = True, False
         self.UP_KEY, self.DOWN_KEY, self.START_KEY, self.BACK_KEY = False, False, False, False
         self.display = pygame.Surface((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
