@@ -84,6 +84,7 @@ class MainMenu(Menu):
                 self.game.running = False
                 self.display_menu = False
                 pygame.quit()
+            self.run_display = False
 
 class OptionsMenu(Menu):
     def __init__(self, game):
