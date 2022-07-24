@@ -25,14 +25,16 @@ SCALED = pygame.SCALED
 # Define a Player object by extending pygame.sprite.Sprite
 # The surface drawn on the screen is now and attribute of 'player'
 
+
 class Player(pygame.sprite.Sprite):
     surf: pygame.Surface
     rect: pygame.Rect
+
     def __init__(self) -> None:
         super().__init__()
         self.surf = pygame.Surface((70, 20))
         self.surf.fill((255, 255, 255))
-        self.rect = self.surf.get_rect(center = (
+        self.rect = self.surf.get_rect(center=(
             (SCREEN_WIDTH - self.surf.get_width()) / 2, SCREEN_HEIGHT - self.surf.get_height())
             )
     
@@ -51,16 +53,19 @@ class Player(pygame.sprite.Sprite):
 
 # Define the ball object by pygame.sprite.Sprite
 # The surface you draw on the screen is now an attribute of 'ball'
+
+
 class Ball(pygame.sprite.Sprite):
     surf: pygame.Surface
     rect: pygame.Rect
     speed_x: int
     speed_y: int
+
     def __init__(self) -> None:
         super().__init__()
         self.surf = pygame.Surface([10, 10])
         self.surf.fill((255, 255, 255))
-        self.rect = self.surf.get_rect(center = (
+        self.rect = self.surf.get_rect(center=(
             (SCREEN_WIDTH - self.surf.get_width()) / 2, 
             (SCREEN_HEIGHT - self.surf.get_height()) / 2
         ))
@@ -68,25 +73,28 @@ class Ball(pygame.sprite.Sprite):
         self.speed_y = 4
     
     def get_speed(self) -> Tuple[int, int]:
-        return (self.speed_x, self.speed_y)
+        return self.speed_x, self.speed_y
 
     def update_speed(self, speed_x: int, speed_y: int) -> None:
         self.speed_x += speed_x
         self.speed_y += speed_y
     
-    def reverse_speed_x(self) ->None:
+    def reverse_speed_x(self) -> None:
         self.speed_x = -self.speed_x
 
-    def reverse_speed_y(self) ->None:
+    def reverse_speed_y(self) -> None:
         self.speed_y = -self.speed_y
 
     def update_ball(self) -> None:
         self.rect.move_ip(self.get_speed())
 
 # Define enemy class
+
+
 class Enemy(pygame.sprite.Sprite):
     surf: pygame.Surface
     rect: pygame.Rect
+
     def __init__(self) -> None:
         super().__init__()
         self.surf = pygame.Surface((80, 20))
@@ -95,7 +103,7 @@ class Enemy(pygame.sprite.Sprite):
 
 
 # Set up the drawing window
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), FULLSCREEN|SCALED)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), FULLSCREEN | SCALED)
 
 # Initialize player. Right now, this is just a rectangle.
 player = Player()
@@ -115,7 +123,7 @@ enemies = pygame.sprite.Group()
 for i in range(0, 10):
     for j in range(0, 5):
         enemy = Enemy()
-        enemy.rect = enemy.surf.get_rect(topleft = [i * 80, j * 20])
+        enemy.rect = enemy.surf.get_rect(topleft=[i * 80, j * 20])
         enemies.add(enemy)
         all_sprites.add(enemy)
 
@@ -159,7 +167,7 @@ while running:
         ball.reverse_speed_y()
     if ball.rect.left <= 0:
         ball.reverse_speed_x()
-    if ball.rect.right >=SCREEN_WIDTH:
+    if ball.rect.right >= SCREEN_WIDTH:
         ball.reverse_speed_x()
     if ball.rect.bottom >= SCREEN_HEIGHT:
         running = False
