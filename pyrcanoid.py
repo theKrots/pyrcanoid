@@ -8,18 +8,41 @@ from pygame import Rect
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 
+class Unit:
+    def __init__(self, state, position):
+        self.state = state
+        self.position = position
+
+    def move(self, move_vector):
+        raise NotImplementedError()
+
+
+class Bat(Unit):
+    def move(self, move_vector):
+        new_pos = self.position + move_vector
+
+        if new_pos.x < 0 or new_pos.x >= self.state.world_size.x - 4:
+            return
+
+        self.position = new_pos
+
+
+class Ball(Unit):
+    def move(self, move_vector):
+        pass
+
+
 class GameState:
     def __init__(self):
         self.world_size = Vector2(60, 48)
-        self.bat_pos = Vector2(30, 47)
+        self.units = [
+            Bat(self, Vector2(30, 47)),
+            Ball(self, Vector2(30, 24))
+        ]
 
     def update(self, move_bat_command):
-        self.bat_pos += move_bat_command
-
-        if self.bat_pos.x < 0:
-            self.bat_pos.x = 0
-        elif self.bat_pos.x >= self.world_size.x - 4:
-            self.bat_pos.x = self.world_size.x - 5
+        for unit in self.units:
+            unit.move(move_bat_command)
 
 
 class UserInterface:
@@ -55,16 +78,25 @@ class UserInterface:
     def update(self):
         self.game_state.update(self.move_bat_command)
 
-    def render(self):
-        self.window.fill((0, 0, 0))
+    def render_unit(self, unit):
+        if type(unit) is Bat:
+            size = 5
+        elif type(unit) is Ball:
+            size = 1
 
-        sprite_point = self.game_state.bat_pos.elementwise() * self.cell_size
+        sprite_point = unit.position.elementwise() * self.cell_size
         pygame.draw.rect(self.window, (0, 0, 255), (
             int(sprite_point.x),
             int(sprite_point.y),
-            int(self.cell_size.x * 5),
+            int(self.cell_size.x * size),
             int(self.cell_size.y))
         )
+
+    def render(self):
+        self.window.fill((0, 0, 0))
+
+        for unit in self.game_state.units:
+            self.render_unit(unit)
 
         pygame.display.update()
 
