@@ -3,7 +3,7 @@
 import os
 import pygame
 from pygame import Vector2
-from pygame import Rect
+# from pygame import Rect
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -82,6 +82,8 @@ class UserInterface:
         if type(unit) is Bat:
             size = 5
         elif type(unit) is Ball:
+            size = 1
+        else:
             size = 1
 
         sprite_point = unit.position.elementwise() * self.cell_size
