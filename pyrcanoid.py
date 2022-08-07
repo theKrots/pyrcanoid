@@ -6,12 +6,15 @@ from pygame import Vector2
 # from pygame import Rect
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
+WINDOW_WIDTH = 30
+WINDOW_HEIGHT = 24
 
 
 class Unit:
-    def __init__(self, state, position):
+    def __init__(self, state, position, size):
         self.state = state
         self.position = position
+        self.size = size
 
     def move(self, move_vector):
         raise NotImplementedError()
@@ -28,16 +31,29 @@ class Bat(Unit):
 
 
 class Ball(Unit):
+    def __init__(self, state, position, size):
+        super().__init__(state, position, size)
+        self.speed = Vector2(1, 1)
+
     def move(self, move_vector):
-        pass
+        # TODO: Fix the ball
+        new_pos = self.position + self.speed
+        if new_pos.x < 0:
+            self.speed = Vector2(1, 1)
+        elif new_pos.x >= self.state.world_size.x - 1:
+            self.speed = Vector2(-1, 1)
+        if new_pos.y < 0 or new_pos.y >= self.state.world_size.y - 1:
+            self.speed = Vector2(1, -1)
+
+        self.position = new_pos
 
 
 class GameState:
     def __init__(self):
-        self.world_size = Vector2(60, 48)
+        self.world_size = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT)
         self.units = [
-            Bat(self, Vector2(30, 47)),
-            Ball(self, Vector2(30, 24))
+            Bat(self, Vector2(int(WINDOW_WIDTH / 2), WINDOW_HEIGHT - 1), 5),
+            Ball(self, Vector2(int(WINDOW_WIDTH / 2), int(WINDOW_HEIGHT / 2)), 1)
         ]
 
     def update(self, move_bat_command):
@@ -79,18 +95,12 @@ class UserInterface:
         self.game_state.update(self.move_bat_command)
 
     def render_unit(self, unit):
-        if type(unit) is Bat:
-            size = 5
-        elif type(unit) is Ball:
-            size = 1
-        else:
-            size = 1
 
         sprite_point = unit.position.elementwise() * self.cell_size
         pygame.draw.rect(self.window, (0, 0, 255), (
             int(sprite_point.x),
             int(sprite_point.y),
-            int(self.cell_size.x * size),
+            int(self.cell_size.x * unit.size),
             int(self.cell_size.y))
         )
 
@@ -107,7 +117,7 @@ class UserInterface:
             self.process_input()
             self.update()
             self.render()
-            self.clock.tick(60)
+            self.clock.tick(30)
 
 
 game = UserInterface()
