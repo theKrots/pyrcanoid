@@ -34,16 +34,20 @@ class Ball(Unit):
     def __init__(self, state, position, size):
         super().__init__(state, position, size)
         self.speed = Vector2(1, 1)
+        self.time = pygame.time.Clock()
 
     def move(self, move_vector):
         # TODO: Fix the ball
+        self.time.tick(30)
         new_pos = self.position + self.speed
         if new_pos.x < 0:
-            self.speed = Vector2(1, 1)
+            self.speed.x *= -1
         elif new_pos.x >= self.state.world_size.x - 1:
-            self.speed = Vector2(-1, 1)
-        if new_pos.y < 0 or new_pos.y >= self.state.world_size.y - 1:
-            self.speed = Vector2(1, -1)
+            self.speed.x *= -1
+        if new_pos.y < 0:
+            self.speed.y *= -1
+        elif new_pos.y >= self.state.world_size.y - 1:
+            self.speed.y *= -1
 
         self.position = new_pos
 
@@ -117,7 +121,7 @@ class UserInterface:
             self.process_input()
             self.update()
             self.render()
-            self.clock.tick(30)
+            self.clock.tick(60)
 
 
 game = UserInterface()
