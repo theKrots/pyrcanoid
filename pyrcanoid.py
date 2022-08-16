@@ -33,18 +33,17 @@ class Bat(Unit):
 class Ball(Unit):
     def __init__(self, state, position, size):
         super().__init__(state, position, size)
-        self.speed = Vector2(1, 1)
+        self.speed = Vector2(0.1, 0.1)
         self.time = pygame.time.Clock()
 
     def move(self, move_vector):
         # TODO: Fix the ball
-        self.time.tick(30)
         new_pos = self.position + self.speed
-        if new_pos.x < 0:
+        if new_pos.x <= 0:
             self.speed.x *= -1
         elif new_pos.x >= self.state.world_size.x - 1:
             self.speed.x *= -1
-        if new_pos.y < 0:
+        if new_pos.y <= 0:
             self.speed.y *= -1
         elif new_pos.y >= self.state.world_size.y - 1:
             self.speed.y *= -1
@@ -59,6 +58,7 @@ class GameState:
             Bat(self, Vector2(int(WINDOW_WIDTH / 2), WINDOW_HEIGHT - 1), 5),
             Ball(self, Vector2(int(WINDOW_WIDTH / 2), int(WINDOW_HEIGHT / 2)), 1)
         ]
+
 
     def update(self, move_bat_command):
         for unit in self.units:
@@ -86,14 +86,14 @@ class UserInterface:
             if event.type == pygame.QUIT:
                 self.running = False
                 break
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.running = False
-                    break
-                elif event.key == pygame.K_RIGHT:
-                    self.move_bat_command.x += 1
-                elif event.key == pygame.K_LEFT:
-                    self.move_bat_command.x -= 1
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_ESCAPE]:
+            self.running = False
+            exit()
+        elif keys[pygame.K_RIGHT]:
+            self.move_bat_command.x += 1
+        elif keys[pygame.K_LEFT]:
+            self.move_bat_command.x -= 1
 
     def update(self):
         self.game_state.update(self.move_bat_command)
